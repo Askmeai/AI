@@ -1,0 +1,55 @@
+<?php
+
+$dataFromFM = $_GET['data'];
+
+
+$result = "Processed data: " . $dataFromFM;
+
+
+$response = ['result' => $result];
+header('Content-Type: application/json');
+echo json_encode($response);
+?>
+
+Phyton
+import requests
+import json
+
+# FileMaker Data API settings
+base_url = 'https://askmeaiapp.com/'
+layout = 'x'
+username = 'YourUsername'
+password = 'YourPassword'
+
+
+headers = {
+    'Content-Type': 'application/json',
+}
+
+
+session = requests.Session()
+session.auth = (username, password)
+
+# FileMaker Data API request
+def fm_api_request(endpoint, method='GET', data=None):
+    url = base_url + endpoint
+    response = session.request(method, url, headers=headers, data=data)
+    response.raise_for_status()
+    return response.json()
+
+
+def fetch_all_records():
+    endpoint = 'layouts/' + layout + '/records'
+    response_data = fm_api_request(endpoint)
+    return response_data
+
+def find_records(query):
+    endpoint = 'layouts/' + layout + '/_find'
+    find_request = {
+        'query': [query]
+    }
+    response_data = fm_api_request(endpoint, method='POST', data=json.dumps(find_request))
+    return response_data
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
