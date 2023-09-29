@@ -1,0 +1,18 @@
+import requests
+
+def check_website_status(url):
+    try:
+        response = requests.get(f'https://isitdownrightnow.com/api/v3/{url}.json')
+        data = response.json()
+        return data['status'] == 'up', data['response_message']
+    except Exception as e:
+        return False, str(e)
+
+if __name__ == "__main__":
+    website_url = input("Filemaker get url: ")
+    is_up, message = check_website_status(website_url)
+    if is_up:
+        print(f"The website is up and running. Message: {message}")
+    else:
+        print(f"The website is down. Message: {message}")
+
